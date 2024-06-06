@@ -5,7 +5,7 @@ from environs import Env
 BASE_DIR = Path(__file__).resolve().parent.parent
 env = Env()
 env.read_env()
-api_key = env.str('token_1')
+api_key = env.str('token_4')
 headers = {
     "Authorization": api_key,
     "Content-Type": "application/json"

@@ -21,9 +21,6 @@ url_barcode = "https://suppliers-api.wildberries.ru/content/v2/barcodes"
 # Обновление карточки
 url_update = "https://suppliers-api.wildberries.ru/content/v2/cards/update"
 
-category = 5038
-subjectID = 3560
-
 
 def get_parents():
     data = {
@@ -33,7 +30,6 @@ def get_parents():
     response = requests.get(url_parents, headers=headers, data=data_json)
     if response.status_code == 200:
         response_data = response.json()
-        pprint(response_data)
         with open(f'{dir_wb}\\parents.json', 'w', encoding='utf-8') as f:
             json.dump(response_data, f, ensure_ascii=False, indent=4)
     else:
@@ -41,34 +37,33 @@ def get_parents():
         logger.error(response.text)
 
 
-def get_category():
-    data = {
-        "name": 'Носки',
-        "limit": 1000,
-        "locale": 'en',
-        "offset": 5000,
-        "parentID": 1000
+def get_category(name):
+    # Параметры запроса
+    params = {
+        'name': name,
+        'limit': 1000,
+        'locale': 'ru',
+        'offset': 0
     }
-
-    url_category = "https://suppliers-api.wildberries.ru/content/v2/object/all"
-    data_json = json.dumps(data)
-    response = requests.get(url_category, headers=headers, data=data_json)
+    url = "https://suppliers-api.wildberries.ru/content/v2/object/all"
+    # Выполнение GET-запроса
+    response = requests.get(url, headers=headers, params=params)
     if response.status_code == 200:
         response_data = response.json()
         pprint(response_data)
-        with open(f'{dir_wb}\\category {category}.json', 'w', encoding='utf-8') as f:
+        with open(f'{dir_wb}\\category {parentID}.json', 'w', encoding='utf-8') as f:
             json.dump(response_data, f, ensure_ascii=False, indent=4)
     else:
         logger.error(response.status_code)
         logger.error(response.text)
 
 
-def get_characteristics():
-    data = {
-        "locale": 'ru'
+def get_characteristics(subjectID):
+    url = f'https://suppliers-api.wildberries.ru/content/v2/object/charcs/{subjectID}'
+    params = {
+        'locale': 'ru'
     }
-    data_json = json.dumps(data)
-    response = requests.get(f'{url_characteristics}/{subjectID}', headers=headers, data=data_json)
+    response = requests.get(url, headers=headers, params=params)
     if response.status_code == 200:
         response_data = response.json()
         pprint(response_data)
@@ -352,6 +347,9 @@ if __name__ == '__main__':
         level="INFO",
         format="{time:YYYY-MM-DD HH:mm:ss} | {level} | {file!s} | {line} | {message}"
     )
+    subjectID = 1559
+    parentID = 200
+    name = 'Значки'
     # parser_wb_cards()
     # get_parents()
     # get_category()
@@ -414,3 +412,6 @@ if __name__ == '__main__':
     #         logger.error(f"Ошибка при отправке запроса: {e}")
     #     logger.success(f'Изменено {chunk_index * 50 + len(push_data)}')
     #     time.sleep(10)
+    # get_parents()
+    # get_category(name)
+    get_characteristics(subjectID)
