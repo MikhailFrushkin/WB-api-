@@ -1,0 +1,15 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyUnresolvedReferencesInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredIdentifiers">
+        <list>
+          <option value="work_schedule.models.Appointment.objects" />
+          <option value="mycego_online.base.models.Category.objects" />
+          <option value="mycego_online.task.models.Task.objects" />
+          <option value="fin_plot.QCustomPlot_PyQt6" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>
