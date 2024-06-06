@@ -20,5 +20,6 @@ url_publish = 'https://cloud-api.yandex.net/v1/disk/resources/publish'
 # domain = 'http://127.0.0.1:8000/api_rest'
 domain = 'https://mycego.online/api_rest'
 url_api_created_prod = f'{domain}/create_prod/'
+url_api_prod_list = f'{domain}/products-list/'
 
 dir_wb = 'dir_wb'

@@ -67,7 +67,7 @@ def get_characteristics(subjectID):
     if response.status_code == 200:
         response_data = response.json()
         pprint(response_data)
-        with open(f'{dir_wb}\\characteristics {subjectID}.json', 'w', encoding='utf-8') as f:
+        with open(f'{dir_wb}\\characteristics.json', 'w', encoding='utf-8') as f:
             json.dump(response_data, f, ensure_ascii=False, indent=4)
     else:
         logger.error(response.status_code)
@@ -175,9 +175,7 @@ def get_barcode(count):
     response = requests.post(url_barcode, headers=headers, data=data_json)
     if response.status_code == 200:
         response_data = response.json()
-        pprint(response_data)
-        with open(f'{dir_wb}\\barcode.json', 'w', encoding='utf-8') as f:
-            json.dump(response_data, f, ensure_ascii=False, indent=4)
+        return response_data
     else:
         logger.error(response.status_code)
         logger.error(response.text)

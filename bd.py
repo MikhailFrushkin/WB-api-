@@ -23,10 +23,12 @@ class CharacteristicValue(Model):
 class Article(Model):
     join_group = IntegerField(verbose_name='Номер склейки')
     url_crm = CharField(verbose_name='URL CRM')
+    public_url = CharField(verbose_name='URL яндекс диска', null=True)
     art = CharField(verbose_name='Артикул', index=True, unique=True)
     name = TextField(verbose_name='Наименование')
     descriptions = TextField(verbose_name='Описание')
-    category = CharField(verbose_name='Категория')
+    category = CharField(verbose_name='Категория', null=True)
+    brand = CharField(verbose_name='Бренд', null=True)
     price = IntegerField(verbose_name='Цена')
     length = IntegerField(verbose_name='Длина')
     width = IntegerField(verbose_name='Ширина')
