@@ -6,6 +6,7 @@ from pprint import pprint
 import requests
 from loguru import logger
 
+from bd import Article
 from config import headers, dir_wb, api_key, token_y, limit
 
 # Все карточки товара
@@ -79,16 +80,19 @@ def parser_wb_cards() -> list[dict]:
     max_attempts = 5
     attempts = 0
     time_sleep = 15
+    limit = 100
 
     result = []  # Здесь будем хранить все полученные данные
     data = {
         "settings": {
+            "sort": {
+                "ascending": False
+            },
             "cursor": {
                 "limit": limit
             },
             "filter": {
-                "withPhoto": -1,
-                "objectIDs": [3560]
+                "withPhoto": 0
             }
         }
     }
@@ -106,7 +110,7 @@ def parser_wb_cards() -> list[dict]:
             result.extend(response_data.get("cards", []))
             total = response_data['cursor']['total']
             nmID = response_data['cursor']['nmID']
-            updatedAt = response_data['cursor']['updatedAt']
+            updatedAt = response_data['cursor'].get('updatedAt', None)
             current_count = len(result)
             logger.info(f"Получено {current_count}")
 
@@ -338,6 +342,18 @@ def push_media_in_comp(art_id: int, index: int, file_name: str, path_image: str,
         logger.error(response.text)
 
 
+def join_cards(targetIMT: int, nmIDs: list):
+    url = 'https://suppliers-api.wildberries.ru/content/v2/cards/moveNm'
+    data = {
+        "targetIMT": targetIMT,
+        "nmIDs": nmIDs
+    }
+    data_json = json.dumps(data)
+    response = requests.post(url, headers=headers, data=data_json)
+    logger.info(response.status_code)
+    logger.info(response.text)
+
+
 if __name__ == '__main__':
     logger.add(
         "logs/main.log",
@@ -352,64 +368,5 @@ if __name__ == '__main__':
     # get_parents()
     # get_category()
     # get_characteristics()
-
-    # get_barcode(1903)
-    # data = art_on_push()
-    # with open('dir_wb/barcode.json', 'r', encoding='utf-8') as f:
-    #     list_sku = json.load(f).get('data')
-    # create_card_wb(data, list_sku)
-
-    # data_arts_wb = parser_wb_cards()
-    # with open('dir_wb/wildberries_data_cards.json', 'r', encoding='utf-8') as f:
-    #     data_arts_wb_in_file = json.load(f)
-    # filtered_list = [d for d in data_arts_wb_in_file if d.get("subjectID") == 3560]
-
-    # for index_main, item in enumerate(filtered_list, start=1):
-    #     count = 0
-    #     try:
-    #         art_id = item['nmID']
-    #         art = item['vendorCode']
-    #         directory = rf'D:\rebase_pop\Готовые переименованные\{art}'
-    #         image_list = ['Подложка.png', 'Размер.png', 'Мокап.png', 'Мокап-2.png', 'Мокап-4.png', 'Мокап-3.png']
-    #
-    #         for index, file_name in enumerate(image_list, start=1):
-    #             if push_media_in_comp(art_id, index, file_name, os.path.join(directory, file_name), art):
-    #                 count += 1
-    #                 time.sleep(0.5)
-    #         logger.debug(f'{index_main} Успешных загрузок для артикула {art}: {count}')
-    #         with open('result.txt', 'a') as f:
-    #             f.write(f'{art}: {count}\n')
-    #     except Exception as ex:
-    #         logger.error(ex)
-    #         time.sleep(30)
-    # Разбиваем список на чанки по 50 элементов
-    # chunk_size = 50
-    # chunks = [filtered_list[i:i + chunk_size] for i in range(0, len(filtered_list), chunk_size)]
-    #
-    # # Проходимся по каждому чанку
-    # for chunk_index, chunk in enumerate(chunks):
-    #     push_data = []
-    #     for index_main, item in enumerate(chunk):
-    #         try:
-    #             for i in item['characteristics']:
-    #                 if i['id'] == 90673:
-    #                     i['value'] = 4
-    #                 elif i['id'] == 90630:
-    #                     i['value'] = 4
-    #                 elif i['id'] == 90652:
-    #                     i['value'] = 0.5
-    #             push_data.append(item)
-    #
-    #         except Exception as ex:
-    #             logger.error(ex)
-    #     data_json = json.dumps(push_data)
-    #     try:
-    #         response = requests.post(url_update, headers=headers, data=data_json)
-    #         print(response.status_code)
-    #     except requests.exceptions.RequestException as e:
-    #         logger.error(f"Ошибка при отправке запроса: {e}")
-    #     logger.success(f'Изменено {chunk_index * 50 + len(push_data)}')
-    #     time.sleep(10)
-    # get_parents()
-    # get_category(name)
-    get_characteristics(subjectID)
+    # get_characteristics(subjectID)
+    join_cards()

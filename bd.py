@@ -39,8 +39,10 @@ class Article(Model):
     created_wb = BooleanField(verbose_name='Заведен', default=False)
     download_images = BooleanField(verbose_name='Фото загружены', default=False)
     joined = BooleanField(verbose_name='Склеен', default=False)
+
     folder_images_for_download = CharField(verbose_name='Папка', null=True)
     barcode = BigIntegerField(verbose_name='barcode', null=True)
+    imtID = BigIntegerField(verbose_name='Id для склейки', null=True)
 
     url_task = TextField(verbose_name='Ссылка на задачу', null=True)
     created_at = DateTimeField(verbose_name='Время создания', default=datetime.now)

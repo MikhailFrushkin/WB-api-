@@ -130,8 +130,9 @@ def push_barcode():
 
 
 if __name__ == '__main__':
+    print()
     # push_characteristic()
     # created_article('Значки 1.xlsx')
     # get_info_site()
     # push_urls_cat_in_arts()
-    push_barcode()
+    # push_barcode()
